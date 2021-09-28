@@ -196,13 +196,13 @@ setFirewall() {
     fi
 }
 install_files(){
-    set -x
+#    set -x
     echo $WORK_DIR
     cd $WORK_DIR
     rm -rf frps*
     cp frpc /usr/bin
     if [ ! -d /etc/frp ];then
-    	mkdir -p /etc/frp
+        mkdir -p /etc/frp
     fi
 #    touch /etc/frp/frpc.ini
     cat<<EOF >/etc/frp/frpc.ini
@@ -217,11 +217,11 @@ install_files(){
         remote_port = ${port2}
 EOF
     sudo cp $WORK_DIR/systemd/frpc.service /usr/lib/systemd/system/
-#    sudo systemctl start /usr/lib/systemd/system/frpc.service
     sudo systemctl enable /usr/lib/systemd/system/frpc.service
     sudo systemctl daemon-reload
     sudo systemctl start /usr/lib/systemd/system/frpc.service
-    set +x
+    sudo systemctl restart /usr/lib/systemd/system/frpc.service
+
     colorEcho $GREEN " FINISHED!"
 }
 install() {
