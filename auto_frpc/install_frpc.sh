@@ -220,6 +220,7 @@ EOF
     sudo systemctl enable /usr/lib/systemd/system/frpc.service
     sudo systemctl daemon-reload
     sudo systemctl start /usr/lib/systemd/system/frpc.service
+    sleep 3
     sudo systemctl restart /usr/lib/systemd/system/frpc.service
 
     colorEcho $GREEN " FINISHED!"
@@ -241,7 +242,7 @@ install() {
 }
     echo -n " 系统版本:  "
     lsb_release -a
-    sudo systemctl start frpc.service
+    sudo systemctl stop frpc.service
     checkSystem
     #    download_src
     download_gz
