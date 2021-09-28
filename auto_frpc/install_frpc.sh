@@ -65,6 +65,11 @@ checkSystem() {
             DOWNLOAD_LINK=$X86
         fi
     fi
+
+    if [ -z "$DOWNLOAD_LINK" ];then
+	colorEcho $RED "Unsupport arch!"
+	exit 2
+    fi
     set +x
 
 }
@@ -117,7 +122,7 @@ download_gz(){
     mkdir -p /tmp/frp
     colorEcho $PLAIN "开始下载 ${DOWNLOAD_LINK}"
     echo ""
-    wget https://github.com/fatedier/frp/releases/download/v0.37.1/frp_0.37.1_linux_amd64.tar.gz -O /tmp/frp/frpc.tar.gz
+    wget $DOWNLOAD_LINK -O /tmp/frp/frpc.tar.gz
     tar zxf /tmp/frp/frpc.tar.gz -C /tmp/frp
     rm /tmp/frp/frpc.tar.gz
     cd /tmp/frp/*
@@ -225,6 +230,11 @@ install_files(){
     cd $WORK_DIR
     rm -rf frps*
     cp frpc /usr/bin
+    if [ $? -ne 0 ];then
+    	colorEcho $RED "COPY to /usr/bin failed!"
+	exit 1
+    fi
+
     if [ ! -d /etc/frp ];then
         mkdir -p /etc/frp
     fi
@@ -269,7 +279,6 @@ install() {
     sudo systemctl stop frpc.service
     checkSystem
     #    download_src
-    exit 0
     download_gz
     read -p "请输入服务器IP:" IP
 
