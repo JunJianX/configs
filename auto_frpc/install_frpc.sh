@@ -10,8 +10,10 @@ PLAIN='\033[0m'
 
 OS=`hostnamectl | grep -i system | cut -d: -f2`
 WORK_DIR=/
-DOWNLOAD_LINK=https://github.com/fatedier/frp/releases/download/v0.37.1/frp_0.37.1_linux_amd64.tar.gz
-
+DOWNLOAD_LINK=''
+ARM32=https://github.com/fatedier/frp/releases/download/v0.37.1/frp_0.37.1_linux_arm.tar.gz
+X86=https://github.com/fatedier/frp/releases/download/v0.37.1/frp_0.37.1_linux_386.tar.gz
+X86_64=https://github.com/fatedier/frp/releases/download/v0.37.1/frp_0.37.1_linux_amd64.tar.gz
 colorEcho() {
     echo -e "${1}${@:2}${PLAIN}"
 }
@@ -42,7 +44,29 @@ checkSystem() {
             colorEcho $RED " 不受支持的Ubuntu版本"
             exit 1
         fi
-     fi
+    fi
+    set -x
+    system_a=`uname -m`
+    bits=`getconf LONG_BIT`
+    result=$(echo $system_a|grep "arm")
+
+    if [[ "$result" != ""  ]];then
+        if [ $bits -eq 32 ];then
+            DOWNLOAD_LINK=$ARM32
+        fi
+    fi
+
+    result=$(echo $system_a|grep "x86")
+
+    if [[ "$result" != ""  ]];then
+        if [ $bits -eq 64 ];then
+            DOWNLOAD_LINK=$X86_64
+        elif [ $bits -eq 32];then
+            DOWNLOAD_LINK=$X86
+        fi
+    fi
+    set +x
+
 }
 
 
@@ -245,6 +269,7 @@ install() {
     sudo systemctl stop frpc.service
     checkSystem
     #    download_src
+    exit 0
     download_gz
     read -p "请输入服务器IP:" IP
 
