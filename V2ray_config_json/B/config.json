@@ -1,0 +1,63 @@
+{
+    "log": {
+      "loglevel": "warning"
+    },
+    "reverse":{
+        "portals":[  
+          {  
+            "tag":"portal",
+            "domain":"pc1.localhost"
+          }
+        ]
+    },
+    "inbounds": [{  
+        "tag":"tunnel",
+        "port":11872,
+        "protocol":"vmess",
+        "settings":{  
+          "clients":[  
+            {  
+              "id":"987804d0-e39f-4fba-b2af-807ad233b576",
+              "alterId":64
+            }
+          ]
+        }
+      },
+      {  
+        "tag": "interconn",
+        "port":16823,
+        "protocol":"vmess",
+        "settings":{  
+          "clients":[  
+            {  
+              "id":"5cbad722-6cd4-47cd-a712-375076b4ba8e",
+              "alterId":64
+            }
+          ]
+        }
+      }],
+
+    "routing": {
+      "domainStrategy": "IPOnDemand",
+      "rules":[
+        {
+            "type":"field",
+            "inboundTag":[  
+              "interconn"
+            ],
+            "outboundTag":"portal"
+        },
+        { 
+            "type":"field",
+            "inboundTag":[  
+              "tunnel"
+            ],
+            "domain":[  
+              "full:private.cloud.com"
+            ],
+            "outboundTag":"portal"
+        }
+      ]
+    }
+  }
+  

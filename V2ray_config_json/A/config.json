@@ -1,0 +1,89 @@
+{
+    "log": {
+      "loglevel": "warning"
+    },
+    "reverse":{ 
+        "bridges":[  
+          {  
+            "tag":"bridge",
+            "domain":"pc1.localhost"
+          }
+        ]
+    },
+    "outbounds": [{  
+        "tag":"tunnel", 
+        "protocol":"vmess",
+        "settings":{  
+          "vnext":[  
+            {  
+              "address":"123.57.220.60",
+              "port":16823,
+              "users":[  
+                {  
+                  "id":"5cbad722-6cd4-47cd-a712-375076b4ba8e",
+                  "alterId":64
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {  
+        "protocol":"freedom",
+        "settings":{  
+        },
+        "tag":"out"
+      }],
+    "routing": {
+      "rules":[
+        {  
+            "type":"field",
+            "inboundTag":["bridge"],
+            "domain":["full:pc1.localhost"],
+            "outboundTag":"tunnel"
+        },
+        { 
+            "type":"field",
+            "inboundTag":["bridge"],
+            "outboundTag":"out"
+        }
+        
+      ]
+    },
+    "dns": {
+      "hosts": {
+        "domain:v2ray.com": "www.vicemc.net",
+        "domain:github.io": "pages.github.com",
+        "domain:wikipedia.org": "www.wikimedia.org",
+        "domain:shadowsocks.org": "electronicsrealm.com"
+      },
+      "servers": [
+        "1.1.1.1",
+        {
+          "address": "114.114.114.114",
+          "port": 53,
+          "domains": [
+            "geosite:cn"
+          ]
+        },
+        "8.8.8.8",
+        "localhost"
+      ]
+    },
+  
+    "policy": {
+      "levels": {
+        "0": {
+          "uplinkOnly": 0,
+          "downlinkOnly": 0
+        }
+      },
+      "system": {
+        "statsInboundUplink": false,
+        "statsInboundDownlink": false,
+        "statsOutboundUplink": false,
+        "statsOutboundDownlink": false
+      }
+    }
+  }
+  

@@ -1,0 +1,45 @@
+{
+    "log": {
+      "loglevel": "warning"
+    },
+    "inbounds": [{
+      "port": 1080,
+      "listen": "127.0.0.1",
+      "tag": "socks-inbound",
+      "protocol": "socks",
+      "settings": {
+        "auth": "noauth",
+        "udp": false,
+        "ip": "127.0.0.1"
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": ["http", "tls"]
+      }
+    }],
+    "outbounds": [{
+      "protocol": "freedom",
+      "settings": {},
+      "tag": "direct"
+    },{
+      "protocol": "blackhole",
+      "settings": {},
+      "tag": "blocked"
+    }],
+    "routing": {
+      "domainStrategy": "IPOnDemand",
+      "rules":[
+        {
+          "type": "field",
+          "ip": ["geoip:private"],
+          "outboundTag": "blocked"
+        },
+        {
+          "type": "field",
+          "domain": ["geosite:category-ads"],
+          "outboundTag": "blocked"
+        }
+      ]
+    }
+  }
+  
