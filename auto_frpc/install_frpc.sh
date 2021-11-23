@@ -67,8 +67,8 @@ checkSystem() {
     fi
 
     if [ -z "$DOWNLOAD_LINK" ];then
-	colorEcho $RED "Unsupport arch!"
-	exit 2
+        colorEcho $RED "Unsupport arch!"
+        exit 2
     fi
     set +x
 
@@ -231,8 +231,8 @@ install_files(){
     rm -rf frps*
     cp frpc /usr/bin
     if [ $? -ne 0 ];then
-    	colorEcho $RED "COPY to /usr/bin failed!"
-	exit 1
+        colorEcho $RED "COPY to /usr/bin failed!"
+        exit 1
     fi
 
     if [ ! -d /etc/frp ];then
@@ -250,12 +250,12 @@ install_files(){
         local_port = ${port3}
         remote_port = ${port2}
 EOF
-    sudo cp $WORK_DIR/systemd/frpc.service /usr/lib/systemd/system/
-    sudo systemctl enable /usr/lib/systemd/system/frpc.service
+    sudo cp $WORK_DIR/systemd/frpc.service /etc/systemd/system/
+    sudo systemctl enable /etc/systemd/system/frpc.service
     sudo systemctl daemon-reload
-    sudo systemctl start /usr/lib/systemd/system/frpc.service
+    sudo systemctl start /etc/systemd/system/frpc.service
     sleep 3
-    sudo systemctl restart /usr/lib/systemd/system/frpc.service
+    sudo systemctl restart /etc/systemd/system/frpc.service
 
     colorEcho $GREEN " FINISHED!"
 }
