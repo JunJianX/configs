@@ -19,8 +19,9 @@ colorEcho() {
 }
 
 checkSystem() {
-    result=$(id | awk '{print $1}')
-    if [ $result != "uid=0(root)" ]; then
+#    result=$(id | awk '{print $1}')
+    result = $(echo $UID)
+    if [ $result != "0" ]; then
         colorEcho $RED " 请以root身份执行该脚本"
         exit 1
     fi
