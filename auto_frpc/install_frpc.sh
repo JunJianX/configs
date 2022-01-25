@@ -75,47 +75,47 @@ checkSystem() {
 }
 
 
-slogon() {
-    clear
-    echo "#############################################################"
-    echo -e "#            ${RED}Ubuntu LTS v2ray一键安装脚本${PLAIN}                #"
-    echo -e "# ${GREEN}作者${PLAIN}: 网络跳越(hijk)                                      #"
-    echo -e "# ${GREEN}网址${PLAIN}: https://hijk.art                                    #"
-    echo -e "# ${GREEN}论坛${PLAIN}: https://hijk.club                                   #"
-    echo -e "# ${GREEN}TG群${PLAIN}: https://t.me/hijkclub                               #"
-    echo -e "# ${GREEN}Youtube频道${PLAIN}: https://youtube.com/channel/UCYTB--VsObzepVJtc9yvUxQ #"
-    echo "#############################################################"
-    echo ""
-}
+# slogon() {
+#     clear
+#     echo "#############################################################"
+#     echo -e "#            ${RED}Ubuntu LTS v2ray一键安装脚本${PLAIN}                #"
+#     echo -e "# ${GREEN}作者${PLAIN}: 网络跳越(hijk)                                      #"
+#     echo -e "# ${GREEN}网址${PLAIN}: https://hijk.art                                    #"
+#     echo -e "# ${GREEN}论坛${PLAIN}: https://hijk.club                                   #"
+#     echo -e "# ${GREEN}TG群${PLAIN}: https://t.me/hijkclub                               #"
+#     echo -e "# ${GREEN}Youtube频道${PLAIN}: https://youtube.com/channel/UCYTB--VsObzepVJtc9yvUxQ #"
+#     echo "#############################################################"
+#     echo ""
+# }
 
-download_src(){
+# download_src(){
 
-    #        mkdir ~/frp
-    cd ROOT_DIR
-    cd frp &>/dev/null
-    if [ $? -ne 0 ];then
-       mkdir frp
-#       cd frp
-    fi
+#     #        mkdir ~/frp
+#     cd ROOT_DIR
+#     cd frp &>/dev/null
+#     if [ $? -ne 0 ];then
+#        mkdir frp
+# #       cd frp
+#     fi
 
-    if [ -f frpc.tar.gz ];then
-        echo "文件已存在"
-    else
-        wget https://github.com/fatedier/frp/releases/download/v0.37.1/frp_0.37.1_linux_amd64.tar.gz -O ./frpc.tar.gz
-    fi
-#        git clone https://github.com/fatedier/frp.git ~/frp --depth 1
+#     if [ -f frpc.tar.gz ];then
+#         echo "文件已存在"
+#     else
+#         wget https://github.com/fatedier/frp/releases/download/v0.37.1/frp_0.37.1_linux_amd64.tar.gz -O ./frpc.tar.gz
+#     fi
+# #        git clone https://github.com/fatedier/frp.git ~/frp --depth 1
 
-    tar -zxf frpc.tar.gz -C ./frp
-    if [ $? -ne 0 ];then
-           colorEcho $RED " 解压失败 $?"
-    fi
+#     tar -zxf frpc.tar.gz -C ./frp
+#     if [ $? -ne 0 ];then
+#            colorEcho $RED " 解压失败 $?"
+#     fi
 
-    if [ $? -eq 0 ];then
-        echo ""
-        colorEcho $BLUE "Download source code finished."
-        echo ""
-    fi
-}
+#     if [ $? -eq 0 ];then
+#         echo ""
+#         colorEcho $BLUE "Download source code finished."
+#         echo ""
+#     fi
+# }
 download_gz(){
 #    set -x
     rm -rf /tmp/frp
@@ -175,55 +175,55 @@ getData() {
         fi
     done
 }
-preinstall() {
-    colorEcho $BLUE " 更新系统..."
-    apt clean all
-    apt update
-    apt -y upgrade
-    colorEcho $BLUE " 安装必要软件"
-    apt install -y telnet wget vim net-tools ntpdate unzip
-    res=`which wget`
-    [ "$?" != "0" ] && apt install -y wget
-    res=`which netstat`
-    [ "$?" != "0" ] && apt install -y net-tools
-    apt autoremove -y
-}
+# preinstall() {
+#     colorEcho $BLUE " 更新系统..."
+#     apt clean all
+#     apt update
+#     apt -y upgrade
+#     colorEcho $BLUE " 安装必要软件"
+#     apt install -y telnet wget vim net-tools ntpdate unzip
+#     res=`which wget`
+#     [ "$?" != "0" ] && apt install -y wget
+#     res=`which netstat`
+#     [ "$?" != "0" ] && apt install -y net-tools
+#     apt autoremove -y
+# }
 
 
-installV2ray() {
-    colorEcho $BLUE " 安装v2ray..."
-    bash <(curl -sL ${V6_PROXY}https://raw.githubusercontent.com/hijkpw/scripts/master/goV2.sh)
+# installV2ray() {
+#     colorEcho $BLUE " 安装v2ray..."
+#     bash <(curl -sL ${V6_PROXY}https://raw.githubusercontent.com/hijkpw/scripts/master/goV2.sh)
 
-    if [ ! -f $CONFIG_FILE ]; then
-        colorEcho $RED " $OS 安装V2ray失败，请到 https://hijk.art 网站反馈"
-        exit 1
-    fi
+#     if [ ! -f $CONFIG_FILE ]; then
+#         colorEcho $RED " $OS 安装V2ray失败，请到 https://hijk.art 网站反馈"
+#         exit 1
+#     fi
 
-    sed -i -e "s/port\":.*[0-9]*,/port\": ${PORT},/" $CONFIG_FILE
-    alterid=`shuf -i50-80 -n1`
-    sed -i -e "s/alterId\":.*[0-9]*/alterId\": ${alterid}/" $CONFIG_FILE
-    uid=`grep id $CONFIG_FILE| cut -d: -f2 | tr -d \",' '`
-    ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-    ntpdate -u time.nist.gov
+#     sed -i -e "s/port\":.*[0-9]*,/port\": ${PORT},/" $CONFIG_FILE
+#     alterid=`shuf -i50-80 -n1`
+#     sed -i -e "s/alterId\":.*[0-9]*/alterId\": ${alterid}/" $CONFIG_FILE
+#     uid=`grep id $CONFIG_FILE| cut -d: -f2 | tr -d \",' '`
+#     ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+#     ntpdate -u time.nist.gov
 
-    systemctl enable v2ray
-    systemctl restart v2ray
-    sleep 3
-    res=`netstat -ntlp| grep ${PORT} | grep v2ray`
-    if [ "${res}" = "" ]; then
-        colorEcho $red " $OS 端口号：${PORT}，v2启动失败，请检查端口是否被占用！"
-        exit 1
-    fi
-    colorEcho $GREEN " v2ray安装成功！"
-}
+#     systemctl enable v2ray
+#     systemctl restart v2ray
+#     sleep 3
+#     res=`netstat -ntlp| grep ${PORT} | grep v2ray`
+#     if [ "${res}" = "" ]; then
+#         colorEcho $red " $OS 端口号：${PORT}，v2启动失败，请检查端口是否被占用！"
+#         exit 1
+#     fi
+#     colorEcho $GREEN " v2ray安装成功！"
+# }
 
-setFirewall() {
-    res=`ufw status | grep -i inactive`
-    if [ "$res" = "" ];then
-        ufw allow ${PORT}/tcp
-        ufw allow ${PORT}/udp
-    fi
-}
+# setFirewall() {
+#     res=`ufw status | grep -i inactive`
+#     if [ "$res" = "" ];then
+#         ufw allow ${PORT}/tcp
+#         ufw allow ${PORT}/udp
+#     fi
+# }
 install_files(){
 #    set -x
     echo $WORK_DIR
@@ -259,21 +259,21 @@ EOF
 
     colorEcho $GREEN " FINISHED!"
 }
-install() {
-    echo -n " 系统版本:  "
-    lsb_release -a
+# install() {
+#     echo -n " 系统版本:  "
+#     lsb_release -a
 
-    checkSystem
-    download_src
-    getData
-    prinstall
-    installBBR
-    installV2ray
-    setFirewall
+#     checkSystem
+#     download_src
+#     getData
+#     prinstall
+#     installBBR
+#     installV2ray
+#     setFirewall
 
-    info
-    bbrReboot
-}
+#     info
+#     bbrReboot
+# }
     echo -n " 系统版本:  "
     lsb_release -a
     sudo systemctl stop frpc.service
@@ -311,19 +311,19 @@ install() {
 
 
 
-uninstall() {
-    read -p " 确定卸载v2ray吗？(y/n)" answer
-    [ -z ${answer} ] && answer="n"
+# uninstall() {
+#     read -p " 确定卸载v2ray吗？(y/n)" answer
+#     [ -z ${answer} ] && answer="n"
 
-    if [ "${answer}" == "y" ] || [ "${answer}" == "Y" ]; then
-        systemctl stop v2ray
-        systemctl disable v2ray
-        rm -rf /etc/v2ray/*
-        rm -rf /usr/bin/v2ray/*
-        rm -rf /var/log/v2ray/*
-        rm -rf /etc/systemd/system/v2ray.service
-        rm -rf /etc/systemd/system/multi-user.target.wants/v2ray.service
+#     if [ "${answer}" == "y" ] || [ "${answer}" == "Y" ]; then
+#         systemctl stop v2ray
+#         systemctl disable v2ray
+#         rm -rf /etc/v2ray/*
+#         rm -rf /usr/bin/v2ray/*
+#         rm -rf /var/log/v2ray/*
+#         rm -rf /etc/systemd/system/v2ray.service
+#         rm -rf /etc/systemd/system/multi-user.target.wants/v2ray.service
 
-        echo -e " ${RED}卸载成功${PLAIN}"
-    fi
-}
+#         echo -e " ${RED}卸载成功${PLAIN}"
+#     fi
+# }
