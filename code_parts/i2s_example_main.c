@@ -32,10 +32,14 @@
 #define I2S_DO_IO       (GPIO_NUM_35)
 #define I2S_DI_IO       (-1)
 
-#define TICK            (100)//buffer要足够大，不然声音会失真
+#define TICK            (100)
 
 #define SAMPLE_PER_CYCLE (SAMPLE_RATE/WAVE_FREQ_HZ)
 
+
+#define GPIO_OUTPUT_IO_0    18
+#define GPIO_OUTPUT_IO_1    19
+#define GPIO_OUTPUT_PIN_SEL  ((1<<GPIO_OUTPUT_IO_0) | (1<<GPIO_OUTPUT_IO_1))
 static uint32_t count = 0;
 /*
 static void setup_triangle_sine_waves(int bits)
@@ -210,6 +214,7 @@ static void send_data4(void)
     // printf("%d\r\n",count);
     if(count +2>sizeof(TestAudioBlk4))
     {
+        gpio_set_level(GPIO_OUTPUT_IO_0, 0);
         count = 0;
     }
     i2s_write(I2S_NUM, samples_data, num, &i2s_bytes_write, 100);
@@ -218,6 +223,21 @@ static void send_data4(void)
 }
 void app_main()
 {
+
+    gpio_config_t io_conf;
+    //disable interrupt
+    io_conf.intr_type = GPIO_PIN_INTR_DISABLE;
+    //set as output mode        
+    io_conf.mode = GPIO_MODE_OUTPUT;
+    //bit mask of the pins that you want to set,e.g.GPIO18/19
+    io_conf.pin_bit_mask = GPIO_OUTPUT_PIN_SEL;
+    //disable pull-down mode
+    io_conf.pull_down_en = 0;
+    //disable pull-up mode
+    io_conf.pull_up_en = 0;
+    //configure GPIO with the given settings
+    gpio_config(&io_conf);
+
     //for 36Khz sample rates, we create 100Hz sine wave, every cycle need 36000/100 = 360 samples (4-bytes or 8-bytes each sample)
     //depend on bits_per_sample
     //using 6 buffers, we need 60-samples per buffer
@@ -243,7 +263,7 @@ void app_main()
     i2s_driver_install(I2S_NUM, &i2s_config, 0, NULL);
     i2s_set_pin(I2S_NUM, &pin_config);
     // i2s_set_adc_mode(I2S_DAC_CHANNEL_BOTH_EN);
-
+    gpio_set_level(GPIO_OUTPUT_IO_0, 1);
     // int test_bits = 16;
     while (1) {
         // setup_triangle_sine_waves(test_bits);
