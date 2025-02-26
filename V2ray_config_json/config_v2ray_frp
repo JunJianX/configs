@@ -1,0 +1,31 @@
+{
+	"log": {
+		    "access": "/var/log/v2ray/access.log",
+		    "error": "/var/log/v2ray/error.log",
+			  "loglevel": "debug"
+	},
+	"inbounds": [{
+		"port": 1080,
+		"protocol": "socks",
+		"sniffing": {
+			"enabled": true,
+			"destOverride": ["http", "tls"]
+		},
+		"settings": {
+			"auth": "noauth"
+		}
+	}],
+	"outbounds": [{
+		"protocol": "vmess",
+		"settings": {
+			"vnext": [{
+				"address": "cn-bj1-kvlqs4ee.frp.cool",
+				"port": 10801,
+				"users": [{
+					"id": "1b89024e-9d19-47be-bc28-318f67908afc",
+					"alterId": 64
+				}]
+			}]
+		}
+	}]
+}
